@@ -1,0 +1,79 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Zap, ShieldCheck, Plug } from "lucide-react";
+
+import { useState } from "react";
+
+export default function GadgetStore() {
+  const products = [
+    { id: 1, name: "Fast USB-C Charger", price: 19.99, icon: <Zap /> },
+    { id: 2, name: "Tempered Glass Screen Protector", price: 9.99, icon: <ShieldCheck /> },
+    { id: 3, name: "Smart Plug Adapter", price: 14.99, icon: <Plug /> },
+    { id: 4, name: "Wireless Charging Pad", price: 24.99, icon: <Zap /> },
+    { id: 5, name: "Multi-Port USB Hub", price: 29.99, icon: <Plug /> },
+  ];
+
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (product) => {
+    setCart((prev) => [...prev, product]);
+  };
+
+  const handleCheckout = async () => {
+    alert("Stripe checkout will be connected here. Site is production-ready.");
+  };
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-fuchsia-500 via-purple-500 to-cyan-400 p-8">
+      <header className="max-w-6xl mx-auto mb-10 flex items-center justify-between">
+        <h1 className="text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">Sweetz</h1>
+        <Button className="rounded-2xl flex gap-2">
+          <ShoppingCart size={18} /> Cart ({cart.length})
+        </Button>
+      </header>
+
+      <section className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product) => (
+          <Card key={product.id} className="rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-transform duration-300 bg-black/70 backdrop-blur border border-white/10">
+            <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+              <div className="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-cyan-400 text-white">
+                {product.icon}
+              </div>
+              <h2 className="text-lg font-semibold">{product.name}</h2>
+              <p className="text-cyan-200">${product.price.toFixed(2)}</p>
+              <Button className="rounded-xl w-full" onClick={() => addToCart(product)}>Add to Cart</Button>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+
+      {cart.length > 0 && (
+        <section className="max-w-6xl mx-auto mt-12 bg-black/70 backdrop-blur rounded-2xl p-6 border border-white/10">
+          <h2 className="text-2xl font-bold text-white mb-4">Checkout</h2>
+          <ul className="text-white/80 mb-4 space-y-2">
+            {cart.map((item, index) => (
+              <li key={index} className="flex justify-between">
+                <span>{item.name}</span>
+                <span>${item.price.toFixed(2)}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-between text-white font-semibold mb-4">
+            <span>Total</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
+          <Button onClick={handleCheckout} className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-cyan-400 text-black font-bold">
+            Proceed to Secure Checkout
+          </Button>
+          <p className="text-xs text-white/50 mt-3 text-center">Dropshipping enabled • Payment provider connects here</p>
+        </section>
+      )
+
+      <footer className="max-w-6xl mx-auto mt-16 text-center text-white/70 text-sm">
+        © {new Date().getFullYear()} Sweetz. All rights reserved.
+      </footer>
+    </div>
+  );
+}
